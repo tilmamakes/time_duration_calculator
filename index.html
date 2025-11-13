@@ -1,92 +1,114 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Time Calculator (+8:30)</title>
   <style>
+    :root {
+      --bg: #000;
+      --fg: #fff;
+      --border: #333;
+      --font: "JetBrains Mono", monospace;
+    }
+
     body {
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: #f4f4f8;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100vh;
+      margin: 0;
     }
+
     .container {
-      background: white;
-      padding: 30px 40px;
-      border-radius: 20px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+      background: var(--bg);
+      padding: 50px 60px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
       text-align: center;
-      width: 320px;
+      width: 380px; /* same bounding box size */
     }
+
     h2 {
-      margin-bottom: 20px;
-      font-size: 1.8rem;
+      margin-bottom: 40px;
+      font-size: 3rem; /* doubled */
+      letter-spacing: 3px;
+      font-weight: 700;
+      color: var(--fg);
     }
-    input[type="time"] {
-      margin: 10px 0;
-      padding: 20px;
-      font-size: 2rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      width: 100%;
-      box-sizing: border-box;
-      text-align: center;
-    }
-    select, button {
-      margin: 10px 0;
-      padding: 12px;
-      font-size: 1.1rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    button {
-      background-color: #007bff;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    .result {
-      margin-top: 20px;
-      font-size: 2.5rem;
-      font-weight: bold;
-    }
+
+    input[type="time"],
+    select,
+    button,
     .small-input {
-      margin-top: 12px;
-      padding: 8px 10px;
-      font-size: 0.95rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
       width: 100%;
       box-sizing: border-box;
+      margin: 14px 0;
+      padding: 18px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 2.6rem; /* doubled font size */
       text-align: center;
+      outline: none;
+      transition: all 0.2s ease;
     }
-    label.small {
-      display: block;
-      font-size: 0.85rem;
-      color: #555;
-      margin-top: 8px;
-      text-align: left;
+
+    input[type="time"]:focus,
+    .small-input:focus {
+      border-color: var(--fg);
     }
+
+    button {
+      border: 1px solid var(--fg);
+      color: var(--bg);
+      background: var(--fg);
+      font-weight: 800;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 2.4rem; /* doubled */
+      padding: 20px;
+    }
+
+    button:hover {
+      background: transparent;
+      color: var(--fg);
+    }
+
+    .result {
+      margin-top: 28px;
+      font-size: 5rem; /* doubled major display */
+      font-weight: 800;
+      letter-spacing: 4px;
+      color: var(--fg);
+    }
+
+    .small-input {
+      font-size: 2.4rem; /* doubled */
+    }
+
+    select {
+      appearance: none;
+      background: var(--bg);
+    }
+
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Time Calculator (+8:30)</h2>
+    <h2>TIME CALCULATOR</h2>
     <input type="time" id="inputTime" required />
     <select id="ampm">
       <option value="AM">AM</option>
       <option value="PM">PM</option>
     </select>
-    <button id="addButton" onclick="addTime()">Add 8 Hours 30 Minutes</button>
+    <button id="addButton" onclick="addTime()">ADD 8 HOURS 30 MINUTES</button>
     <div class="result" id="result"></div>
     <input id="customDuration" class="small-input" type="text" value="08:30" aria-label="Custom duration (hh:mm)" />
   </div>
@@ -96,7 +118,7 @@
       if (!dur || typeof dur !== 'string') return null;
       dur = dur.trim();
       if (dur === '') return null;
-      if (/^\d{1,3}$/.test(dur)) return [0, parseInt(dur, 10)];
+      if (/^\\d{1,3}$/.test(dur)) return [0, parseInt(dur, 10)];
       const parts = dur.split(':');
       if (parts.length === 2) {
         const h = parseInt(parts[0], 10);
@@ -114,7 +136,7 @@
       const custom = document.getElementById('customDuration').value;
 
       if (!input) {
-        document.getElementById('result').innerText = "Please enter a time.";
+        document.getElementById('result').innerText = "ENTER TIME";
         return;
       }
 
@@ -139,22 +161,21 @@
         String(hours).padStart(2, '0') + ":" +
         String(minutes).padStart(2, '0') + " " + newAmPm;
 
-      document.getElementById('result').innerText = "Result: " + formattedTime;
+      document.getElementById('result').innerText = formattedTime;
     }
 
     const customDuration = document.getElementById('customDuration');
     const addButton = document.getElementById('addButton');
 
-    // Update button text dynamically and trigger calculation on Enter
     customDuration.addEventListener('input', () => {
       const dur = parseDurationToHM(customDuration.value) || [8, 30];
-      addButton.textContent = `Add ${dur[0]} Hours ${dur[1]} Minutes`;
+      addButton.textContent = `ADD ${dur[0]} HOURS ${dur[1]} MINUTES`;
     });
 
     customDuration.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         const dur = parseDurationToHM(customDuration.value) || [8, 30];
-        addButton.textContent = `Add ${dur[0]} Hours ${dur[1]} Minutes`;
+        addButton.textContent = `ADD ${dur[0]} HOURS ${dur[1]} MINUTES`;
         addTime();
       }
     });
